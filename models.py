@@ -70,6 +70,7 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(20), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
+    semester = db.Column(db.Integer, nullable=True)
     staffs = db.relationship('Staff', backref='course', lazy=True)
     feedback_responses = db.relationship('FeedbackResponse', backref='course', lazy=True)
 

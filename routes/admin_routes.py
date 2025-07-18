@@ -178,13 +178,14 @@ def manage_courses():
         if action == 'create_course':
             code = request.form.get('code')
             name = request.form.get('name')
+            semester = request.form.get('semester')
             if not code or not name:
                 flash('Course code and name are required', 'danger')
                 return redirect(url_for('admin.manage_courses'))
             if Course.query.filter_by(code=code).first():
                 flash('Course code already exists', 'danger')
                 return redirect(url_for('admin.manage_courses'))
-            course = Course(code=code, name=name)
+            course = Course(code=code, name=name, semester=semester)
             db.session.add(course)
             db.session.commit()
             flash('Course created successfully', 'success')

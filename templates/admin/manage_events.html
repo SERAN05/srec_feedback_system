@@ -89,13 +89,8 @@
           <label for="warning_message" class="form-label">Warning Message (shown to students)</label>
           <textarea name="warning_message" id="warning_message" class="form-control" placeholder="This feedback is for the specified class only."></textarea>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Event Access</label>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="is_open_to_all" name="is_open_to_all" checked>
-            <label class="form-check-label" for="is_open_to_all">Open to All Students</label>
-          </div>
-        </div>
+        <!-- Event Access toggle removed as per request -->
+        <div id="roll-number-section">
         <div id="roll-range-fields" class="mb-3">
           <label class="form-label">Allowed Roll Number Range</label>
           <div class="row">
@@ -107,6 +102,29 @@
             </div>
           </div>
           <div class="form-text">Only students with roll numbers in this range can attend.</div>
+        </div>
+        <!-- Add Specific Roll Number Section -->
+        <div id="specific-roll-section" class="mb-3">
+          <label class="form-label">Add Specific Roll Number</label>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" id="specific_roll_input" placeholder="Add specific roll number">
+            <button type="button" class="btn btn-outline-primary" id="add_specific_roll_btn">Add</button>
+          </div>
+          <div id="specific_roll_list" class="mb-2"></div>
+          <div class="form-text">Add individual roll numbers for event access.</div>
+        </div>
+        <!-- File Upload for Roll Numbers -->
+        <div class="mb-3">
+          <label class="form-label">Upload Roll Numbers (XLSX/CSV)</label>
+          <input type="file" class="form-control" id="roll_file_input" accept=".xlsx,.xls,.csv">
+          <div id="file_roll_list" class="mt-2"></div>
+          <div class="form-text">Upload a file containing roll numbers. Extracted roll numbers will be shown below.</div>
+        </div>
+        <!-- Allocated Roll Numbers Display -->
+        <div class="mb-3">
+          <label class="form-label">Allocated Roll Numbers</label>
+          <div id="allocated_roll_numbers" class="border rounded p-2 bg-light" style="min-height:40px;"></div>
+        </div>
         </div>
         <div class="mb-3">
           <label class="form-label">Select Courses for this Event</label>
@@ -190,4 +208,22 @@
   {% endif %}
 </div>
 {% endblock %}
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script src="{{ url_for('static', filename='js/admin.js') }}?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var isOpenToAll = document.getElementById('is_open_to_all');
+  var rollSection = document.getElementById('roll-number-section');
+  function toggleRollSection() {
+    if (isOpenToAll.checked) {
+      rollSection.style.display = 'none';
+    } else {
+      rollSection.style.display = '';
+    }
+  }
+  if (isOpenToAll && rollSection) {
+    isOpenToAll.addEventListener('change', toggleRollSection);
+    toggleRollSection();
+  }
+});
+</script>
