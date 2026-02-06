@@ -1,7 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from myextensions import db
+<<<<<<< HEAD
 from models import Student, Event, FeedbackResponse, Course, Staff, Question, QuestionResponse, GeneralFeedback
+=======
+from models import Student, Event, FeedbackResponse, Course, Staff, Question, QuestionResponse
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
 student_bp = Blueprint('student', __name__, url_prefix='/student')
 
@@ -60,6 +64,7 @@ def dashboard():
                            event_blocked=event_blocked,
                            warning_message=warning_message)
 
+<<<<<<< HEAD
 @student_bp.route('/general-feedback')
 def general_feedback_dashboard():
     student_id = session.get('student_id')
@@ -124,6 +129,8 @@ def submit_feedback(category):
                          category_name=category_names[category],
                          student=student)
 
+=======
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 @student_bp.route('/feedback', methods=['GET', 'POST'])
 def feedback_form():
     student_id = session.get('student_id')
@@ -183,7 +190,11 @@ def feedback_form():
         flash('Feedback submitted successfully', 'success')
         return redirect(url_for('student.thank_you'))
     courses = active_event.courses
+<<<<<<< HEAD
     questions = Question.query.filter_by(is_archived=False).all()
+=======
+    questions = Question.query.all()
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     course_staffs = {}
     for course in courses:
         course_staffs[course.id] = Staff.query.filter_by(course_id=course.id).all()
@@ -198,4 +209,8 @@ def feedback_form():
 def thank_you():
     if not session.get('student_id'):
         return redirect(url_for('student.login'))
+<<<<<<< HEAD
     return render_template('student/thank_you.html')
+=======
+    return render_template('student/thank_you.html')
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c

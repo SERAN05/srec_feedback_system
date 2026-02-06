@@ -1,10 +1,18 @@
 {% extends "base.html" %}
+<<<<<<< HEAD
 {% block title %}Manage Courses | Feedback System{% endblock %}
+=======
+{% block title %}Manage Courses | Course Feedback System{% endblock %}
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
   <div class="container">
+<<<<<<< HEAD
   <a class="navbar-brand d-flex align-items-center" href="#"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;"><span class="navbar-title-visible">Feedback System</span></a>
+=======
+    <a class="navbar-brand d-flex align-items-center" href="#"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;"><span class="navbar-title-visible">Course Feedback System</span></a>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -66,6 +74,13 @@
           <label for="name" class="form-label">Course Name</label>
           <input type="text" name="name" id="name" class="form-control" required>
         </div>
+<<<<<<< HEAD
+=======
+        <div class="mb-3">
+          <label for="semester" class="form-label">Semester</label>
+          <input type="number" name="semester" id="semester" class="form-control" min="1" max="8" required>
+        </div>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
         <button type="submit" class="btn btn-success">Create Course</button>
       </form>
     </div>

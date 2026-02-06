@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, send_file
 from flask_login import login_required, login_user, logout_user, current_user
 from myextensions import db
@@ -59,6 +60,13 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 import os
 import pandas as pd
 from io import BytesIO
+=======
+import os
+import pandas as pd
+from io import BytesIO
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, send_file
+from flask_login import login_required, login_user, logout_user, current_user
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import func, inspect
@@ -69,6 +77,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 import io
 import zipfile
+<<<<<<< HEAD
 from models import User, Student, Event, Course, Staff, Question, FeedbackResponse, QuestionResponse, GeneralFeedback
 from utils.excel_handler import allowed_file, validate_student_excel, validate_course_staff_excel
 from utils.pdf_generator import generate_pdf_report
@@ -178,6 +187,12 @@ def download_sentiment_pdf():
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 # Import summarizer
 from summarizer import summarize_feedback
+=======
+
+from models import User, Student, Event, Course, Staff, Question, FeedbackResponse, QuestionResponse
+from utils.excel_handler import allowed_file, validate_student_excel, validate_course_staff_excel
+from utils.pdf_generator import generate_pdf_report
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -196,6 +211,7 @@ def safe_filter(query_obj):
         pass
     return query_obj
 
+<<<<<<< HEAD
 # ...existing code...
 
 @admin_bp.route('/api/download-summary-pdf', methods=['POST'])
@@ -232,6 +248,8 @@ def safe_filter(query_obj):
         pass
     return query_obj
 
+=======
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 @admin_bp.route('/login', methods=['GET', 'POST'])
 def login():
     # Always require credentials, even if already authenticated
@@ -263,7 +281,10 @@ def dashboard():
     events = safe_filter(Event.query).all()
     total_students = Student.query.count()
     total_responses = FeedbackResponse.query.count()
+<<<<<<< HEAD
     total_general_feedback = GeneralFeedback.query.count()
+=======
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     active_event = safe_filter(Event.query.filter_by(is_active=True)).first()
     event_responses = 0
     completion_rate = 0
@@ -274,6 +295,7 @@ def dashboard():
         completion_rate = (event_responses / total_students) * 100
     return render_template('admin/dashboard.html', events=events,
                            total_students=total_students, total_responses=total_responses,
+<<<<<<< HEAD
                            total_general_feedback=total_general_feedback,
                            active_event=active_event, completion_rate=completion_rate, event_responses=event_responses,
                            students=students, responded_ids=responded_ids)
@@ -385,6 +407,11 @@ def general_feedback_stats():
         'category_data': category_data
     })
 
+=======
+                           active_event=active_event, completion_rate=completion_rate, event_responses=event_responses,
+                           students=students, responded_ids=responded_ids)
+
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 @admin_bp.route('/events', methods=['GET', 'POST'])
 @login_required
 def manage_events():
@@ -446,13 +473,18 @@ def manage_events():
             flash('Event was moved to Past Responses.', 'success')
     events = safe_filter(Event.query).all()
     courses = Course.query.all()
+<<<<<<< HEAD
     questions = Question.query.filter_by(is_archived=False).all()
+=======
+    questions = Question.query.all()
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     return render_template('admin/manage_events.html', events=events, questions=questions, courses=courses)
 
 @admin_bp.route('/delete_question/<int:question_id>', methods=['POST'])
 @login_required
 def delete_question(question_id):
     q = Question.query.get_or_404(question_id)
+<<<<<<< HEAD
     # Check if any event is currently active
     try:
         active_event = Event.query.filter_by(is_active=True, is_deleted=False).first()
@@ -466,6 +498,10 @@ def delete_question(question_id):
         q.is_archived = True
         db.session.commit()
         flash("Question archived (has responses) and will no longer appear in new feedback.", "info")
+=======
+    if q.responses:
+        flash("Cannot delete question with existing responses.", "danger")
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     else:
         db.session.delete(q)
         db.session.commit()
@@ -495,13 +531,21 @@ def manage_courses():
         if action == 'create_course':
             code = request.form.get('code')
             name = request.form.get('name')
+<<<<<<< HEAD
+=======
+            semester = request.form.get('semester')
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
             if not code or not name:
                 flash('Course code and name are required', 'danger')
                 return redirect(url_for('admin.manage_courses'))
             if Course.query.filter_by(code=code).first():
                 flash('Course code already exists', 'danger')
                 return redirect(url_for('admin.manage_courses'))
+<<<<<<< HEAD
             course = Course(code=code, name=name)
+=======
+            course = Course(code=code, name=name, semester=semester)
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
             db.session.add(course)
             db.session.commit()
             flash('Course created successfully', 'success')
@@ -511,11 +555,22 @@ def manage_courses():
             if not course_id or not staff_name:
                 flash('Course and staff name are required', 'danger')
                 return redirect(url_for('admin.manage_courses'))
+<<<<<<< HEAD
             course = Course.query.get_or_404(course_id)
             staff = Staff(name=staff_name, course_id=course.id)
             db.session.add(staff)
             db.session.commit()
             flash('Staff added successfully', 'success')
+=======
+            staff = Staff.query.get_or_404(course_id)
+            if FeedbackResponse.query.filter_by(course_id=staff.course_id).count() > 0:
+                flash('Cannot add staff to course with existing responses', 'danger')
+            else:
+                staff = Staff(name=staff_name, course_id=staff.course_id)
+                db.session.add(staff)
+                db.session.commit()
+                flash('Staff added successfully', 'success')
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
         elif action == 'delete_course':
             course_id = request.form.get('course_id')
             course = Course.query.get_or_404(course_id)
@@ -660,7 +715,11 @@ def results():
         active_event = Event.query.filter_by(is_active=True).first()
     courses = Course.query.all()
     staffs = Staff.query.all()
+<<<<<<< HEAD
     questions = Question.query.filter_by(is_archived=False).all()
+=======
+    questions = Question.query.all()
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     students = Student.query.order_by(Student.roll_number).all()
     responded_ids = set([r[0] for r in db.session.query(FeedbackResponse.student_id).filter_by(event_id=active_event.id).distinct().all()]) if active_event else set()
     return render_template('admin/results.html', active_event=active_event,
@@ -685,6 +744,7 @@ def get_staff_results(staff_id):
             return jsonify({'error': 'No active event found'}), 404
     feedback_responses = FeedbackResponse.query.filter_by(staff_id=staff_id, event_id=event_id).all()
     question_averages = {}
+<<<<<<< HEAD
     # Only include questions that have at least one response for this staff/event
     used_q_ids = set()
     for fb in feedback_responses:
@@ -694,14 +754,25 @@ def get_staff_results(staff_id):
         questions = Question.query.filter(Question.id.in_(used_q_ids)).order_by(Question.id).all()
     else:
         questions = []
+=======
+    questions = Question.query.all()
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     for q in questions:
         ratings = []
         for feedback in feedback_responses:
             resp = QuestionResponse.query.filter_by(feedback_id=feedback.id, question_id=q.id).first()
             if resp:
                 ratings.append(resp.rating)
+<<<<<<< HEAD
         avg = sum(ratings) / len(ratings) if ratings else 0
         question_averages[q.id] = {'question_text': q.text, 'average': round(avg, 2), 'count': len(ratings)}
+=======
+        if ratings:
+            avg = sum(ratings) / len(ratings)
+            question_averages[q.id] = {'question_text': q.text, 'average': round(avg, 2), 'count': len(ratings)}
+        else:
+            question_averages[q.id] = {'question_text': q.text, 'average': 0, 'count': 0}
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     responded_students = db.session.query(Student.id).join(FeedbackResponse, Student.id == FeedbackResponse.student_id)\
                          .filter(FeedbackResponse.staff_id == staff_id, FeedbackResponse.event_id == event_id)\
                          .distinct().count()
@@ -838,6 +909,7 @@ def force_logout():
     logout_user()
     flash("Session ended. Please log in again to access the admin panel.", "info")
     return redirect(url_for('index'))
+<<<<<<< HEAD
 
 # New route using updated AI PDF generator in utils/feedback_ai.py
 @admin_bp.route('/api/download-ai-summary-pdf', methods=['POST'])
@@ -861,3 +933,5 @@ def download_ai_summary_pdf():
         as_attachment=True,
         download_name=f'AI_Summary_{category}.pdf'
     )
+=======
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c

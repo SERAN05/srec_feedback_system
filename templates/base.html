@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
   <title>{% block title %}Feedback System{% endblock %}</title>
+=======
+  <title>{% block title %}Course Feedback System{% endblock %}</title>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,17 +37,29 @@
         {% if current_user.is_authenticated and current_user.is_admin %}
           <a class="navbar-brand d-flex align-items-center" href="{{ url_for('admin.dashboard') }}">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;">
+<<<<<<< HEAD
             <span class="navbar-title-visible">Feedback System</span>
+=======
+            <span class="navbar-title-visible">Course Feedback System</span>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
           </a>
         {% elif current_user.is_authenticated %}
           <a class="navbar-brand d-flex align-items-center" href="{{ url_for('student.dashboard') }}">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;">
+<<<<<<< HEAD
             <span class="navbar-title-visible">Feedback System</span>
+=======
+            <span class="navbar-title-visible">Course Feedback System</span>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
           </a>
         {% else %}
           <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;">
+<<<<<<< HEAD
             <span class="navbar-title-visible">Feedback System</span>
+=======
+            <span class="navbar-title-visible">Course Feedback System</span>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
           </a>
         {% endif %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,7 +117,11 @@
           <div class="container">
             <div class="text-center my-5 fade-in-up">
               <div class="mb-4">
+<<<<<<< HEAD
                 <h1 class="display-4 fw-bold text-gradient mb-3">Welcome to <span class="feedback-system-highlight">Unified Feedback System</span></h1>
+=======
+                <h1 class="display-4 fw-bold text-gradient mb-3">Welcome to Course <span class="feedback-system-highlight">Feedback System</span></h1>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
                 <p class="lead college-name fs-3 mb-4">Sri Ramakrishna Engineering College (Autonomous)</p>
                 <p class="text-secondary fs-5">Please choose your login type to continue</p>
               </div>
@@ -111,8 +131,13 @@
                   <div class="card access-card h-100 hover-lift">
                     <div class="card-body text-center d-flex flex-column">
                       <div class="mb-4">
+<<<<<<< HEAD
                         <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center portal-avatar" style="width: 90px; height: 90px; overflow: hidden;">
                           <img src="{{ url_for('static', filename='images/student.png') }}" alt="Student Profile" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%; background:#fff;">
+=======
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; overflow: hidden;">
+                          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Student Logo" style="width: 64px; height: 64px; object-fit: cover; border-radius: 50%; background: white;">
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
                         </div>
                       </div>
                       <h3 class="card-title fw-bold text-primary mb-3">Student Portal</h3>
@@ -128,8 +153,13 @@
                   <div class="card access-card h-100 hover-lift">
                     <div class="card-body text-center d-flex flex-column">
                       <div class="mb-4">
+<<<<<<< HEAD
                         <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center portal-avatar" style="width: 90px; height: 90px; overflow: hidden;">
                           <img src="{{ url_for('static', filename='images/admin.png') }}" alt="Admin Profile" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%; background:#fff;">
+=======
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                          <i class="fas fa-user-tie fa-2x text-success"></i>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
                         </div>
                       </div>
                       <h3 class="card-title fw-bold text-success mb-3">Admin Portal</h3>
@@ -140,6 +170,7 @@
                     </div>
                   </div>
                 </div>
+<<<<<<< HEAD
                 <div class="col-lg-4 col-md-6">
                   <div class="card access-card h-100 hover-lift">
                     <div class="card-body text-center d-flex flex-column">
@@ -159,10 +190,16 @@
               </div>
               
               <!-- College Information Banner (logo removed as requested) -->
+=======
+              </div>
+              
+              <!-- College Information Banner -->
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
               <div class="row justify-content-center mt-5">
                 <div class="col-lg-10">
                   <div class="card glass-effect border-0">
                     <div class="card-body py-4">
+<<<<<<< HEAD
                       <div class="text-center text-lg-start">
                         <h5 class="fw-bold text-primary mb-2">Sri Ramakrishna Engineering College</h5>
                         <p class="text-muted mb-0">
@@ -170,6 +207,22 @@
                           <i class="fas fa-certificate text-info me-2 ms-2"></i>NBA Accredited Programs |
                           <i class="fas fa-university text-primary me-2 ms-2"></i>Autonomous Institution
                         </p>
+=======
+                      <div class="row align-items-center text-center text-lg-start">
+                        <div class="col-lg-8">
+                          <h5 class="fw-bold text-primary mb-2">Sri Ramakrishna Engineering College</h5>
+                          <p class="text-muted mb-0">
+                            <i class="fas fa-award text-warning me-2"></i>NAAC 'A+' Accredited | 
+                            <i class="fas fa-certificate text-info me-2 ms-2"></i>NBA Accredited Programs | 
+                            <i class="fas fa-university text-primary me-2 ms-2"></i>Autonomous Institution
+                          </p>
+                        </div>
+                        <div class="col-lg-4 mt-3 mt-lg-0">
+                          <div class="d-flex justify-content-center justify-content-lg-end">
+                            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height: 60px; border-radius: 8px;">
+                          </div>
+                        </div>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
                       </div>
                     </div>
                   </div>
@@ -177,7 +230,10 @@
               </div>
             </div>
           </div>
+<<<<<<< HEAD
                 <!-- Removed duplicate In-charge Portal card below the college info banner -->
+=======
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
           {% endblock %}
         </div>
       </div>
@@ -189,7 +245,11 @@
         <div class="row align-items-center">
           <div class="col-md-8 text-center text-md-start">
             <div class="text-dark">
+<<<<<<< HEAD
               <strong>© 2026 Sri Ramakrishna Engineering College (Autonomous)</strong><br>
+=======
+              <strong>© 2025 Sri Ramakrishna Engineering College (Autonomous)</strong><br>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
               <small class="text-muted">All Rights Reserved. Empowering Excellence in Engineering Education.</small>
             </div>
           </div>
@@ -249,9 +309,12 @@
   </script>
   
   {% block scripts %}{% endblock %}
+<<<<<<< HEAD
   <!-- Load admin.js after all DOM content -->
   {% if '/admin/' in request.path %}
     <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
   {% endif %}
+=======
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 </body>
 </html>

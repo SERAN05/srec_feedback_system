@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // AI Sentiment Analysis workflow
 document.addEventListener('DOMContentLoaded', function() {
   const aiSentimentBtn = document.getElementById('aiSentimentBtn');
@@ -90,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
+=======
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 document.addEventListener('DOMContentLoaded', function(){
   console.log("Admin JS loaded");
   var isOpenToAll = document.getElementById('is_open_to_all');

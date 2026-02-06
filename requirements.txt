@@ -5,7 +5,11 @@ Flask-Login
 pandas
 openpyxl
 reportlab
+<<<<<<< HEAD
 matplotlib
 Werkzeug
 transformers
 torch
+=======
+Werkzeug
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c

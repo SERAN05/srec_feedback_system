@@ -1,5 +1,9 @@
 {% extends "base.html" %}
+<<<<<<< HEAD
 {% block title %}Manage Events | Feedback System{% endblock %}
+=======
+{% block title %}Manage Events | Course Feedback System{% endblock %}
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
@@ -12,7 +16,11 @@
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
   <div class="container">
+<<<<<<< HEAD
   <a class="navbar-brand d-flex align-items-center" href="#"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;"><span class="navbar-title-visible">Feedback System</span></a>
+=======
+    <a class="navbar-brand d-flex align-items-center" href="#"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;"><span class="navbar-title-visible">Course Feedback System</span></a>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -89,6 +97,7 @@
           <label for="warning_message" class="form-label">Warning Message (shown to students)</label>
           <textarea name="warning_message" id="warning_message" class="form-control" placeholder="This feedback is for the specified class only."></textarea>
         </div>
+<<<<<<< HEAD
         <div class="mb-3">
           <label class="form-label">Event Access</label>
           <div class="form-check form-switch">
@@ -96,6 +105,10 @@
             <label class="form-check-label" for="is_open_to_all">Open to All Students</label>
           </div>
         </div>
+=======
+        <!-- Event Access toggle removed as per request -->
+        <div id="roll-number-section">
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
         <div id="roll-range-fields" class="mb-3">
           <label class="form-label">Allowed Roll Number Range</label>
           <div class="row">
@@ -130,6 +143,10 @@
           <label class="form-label">Allocated Roll Numbers</label>
           <div id="allocated_roll_numbers" class="border rounded p-2 bg-light" style="min-height:40px;"></div>
         </div>
+<<<<<<< HEAD
+=======
+        </div>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
         <div class="mb-3">
           <label class="form-label">Select Courses for this Event</label>
           <div class="row">
@@ -213,4 +230,25 @@
 </div>
 {% endblock %}
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<<<<<<< HEAD
 <script src="{{ url_for('static', filename='js/admin.js') }}?v=2"></script>
+=======
+<script src="{{ url_for('static', filename='js/admin.js') }}?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var isOpenToAll = document.getElementById('is_open_to_all');
+  var rollSection = document.getElementById('roll-number-section');
+  function toggleRollSection() {
+    if (isOpenToAll.checked) {
+      rollSection.style.display = 'none';
+    } else {
+      rollSection.style.display = '';
+    }
+  }
+  if (isOpenToAll && rollSection) {
+    isOpenToAll.addEventListener('change', toggleRollSection);
+    toggleRollSection();
+  }
+});
+</script>
+>>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
