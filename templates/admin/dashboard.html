@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-<<<<<<< HEAD
 {% block title %}Admin Dashboard | Feedback System{% endblock %}
-=======
-{% block title %}Admin Dashboard | Course Feedback System{% endblock %}
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
@@ -33,7 +29,6 @@
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
   <div class="container">
-<<<<<<< HEAD
     <a class="navbar-brand d-flex align-items-center" href="#">
       <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height:42px; margin-right:12px; border-radius: 6px;">
       <div class="d-flex align-items-center">
@@ -43,9 +38,6 @@
         </span>
       </div>
     </a>
-=======
-    <a class="navbar-brand d-flex align-items-center" href="#"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;"><span class="navbar-title-visible">Course Feedback System</span></a>
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -76,14 +68,11 @@
             <i class="fas fa-chart-bar me-2"></i>Results
           </a>
         </li>
-<<<<<<< HEAD
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('admin.general_feedback') }}">
             <i class="fas fa-comments me-2"></i>General Feedback
           </a>
         </li>
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
@@ -178,7 +167,6 @@
         </a>
       </div>
     </div>
-<<<<<<< HEAD
 
     <!-- General Feedback Card -->
     <div class="dashboard-card">
@@ -194,8 +182,6 @@
         </a>
       </div>
     </div>
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
   </div>
 
   <!-- Main Content Grid -->
@@ -220,20 +206,9 @@
               <span class="fw-bold text-primary">{{ completion_rate|round(1) }}%</span>
             </div>
             <div class="progress-enhanced">
-<<<<<<< HEAD
         <div class="progress-bar" role="progressbar" id="progressBar"
           data-completion="{{ completion_rate }}"
           aria-valuenow="{{ completion_rate }}" aria-valuemin="0" aria-valuemax="100">
-=======
-              <div class="progress-bar" 
-                   role="progressbar" 
-                   id="progressBar"
-                   data-completion="{{ completion_rate }}"
-                   style="width: {{ completion_rate }}%"
-                   aria-valuenow="{{ completion_rate }}" 
-                   aria-valuemin="0" 
-                   aria-valuemax="100">
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
                 {{ completion_rate|round(1) }}%
               </div>
             </div>
@@ -307,13 +282,10 @@
               <i class="fas fa-download me-2"></i>
               <div>Download Reports</div>
             </a>
-<<<<<<< HEAD
             <a href="{{ url_for('admin.general_feedback') }}" class="btn btn-outline-info mb-2">
               <i class="fas fa-comments me-2"></i>
               <div>General Feedback</div>
             </a>
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
           </div>
         </div>
       </div>

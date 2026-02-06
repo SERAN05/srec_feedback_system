@@ -1,158 +1,40 @@
-<<<<<<< HEAD
+import io
+import os
+import zipfile
+from io import BytesIO
+
+import pandas as pd
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, send_file
 from flask_login import login_required, login_user, logout_user, current_user
-from myextensions import db
-from models import User, Student, Event, Course, Staff, Question, FeedbackResponse, QuestionResponse, GeneralFeedback
-from utils.excel_handler import allowed_file, validate_student_excel, validate_course_staff_excel
-from utils.pdf_generator import generate_pdf_report
-from summarizer import summarize_feedback
-import os
-import pandas as pd
-from io import BytesIO
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from sqlalchemy import func, inspect
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from sqlalchemy import func, inspect
-from reportlab.lib.pagesizes import letter, landscape
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-import io
-import zipfile
+
+from myextensions import db
+from models import User, Student, Event, Course, Staff, Question, FeedbackResponse, QuestionResponse, GeneralFeedback
+from summarizer import summarize_feedback
+from utils.excel_handler import allowed_file, validate_student_excel, validate_course_staff_excel
+from utils.pdf_generator import generate_pdf_report, generate_summary_pdf, generate_questions_pdf
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-# Sentiment PDF download route (guaranteed registration)
-@admin_bp.route('/api/download-sentiment-pdf', methods=['POST'])
-@login_required
-def download_sentiment_pdf():
-    import logging
-    try:
-        if not current_user.is_admin:
-            logging.error('Access denied: not admin')
-            return jsonify({'error': 'Access denied'}), 403
-        data = request.get_json()
-        category = data.get('category', 'all')
-        if category == 'all':
-            feedbacks = GeneralFeedback.query.order_by(GeneralFeedback.timestamp.desc()).all()
-        else:
-            feedbacks = GeneralFeedback.query.filter_by(category=category).order_by(GeneralFeedback.timestamp.desc()).all()
-        feedback_texts = [fb.content for fb in feedbacks if fb.content]
-        if not feedback_texts:
-            logging.warning(f'No feedbacks found for category: {category}')
-            return jsonify({'error': 'No feedbacks found for this category.'}), 400
-        from utils.sentiment_pdf import generate_sentiment_pdf
-        pdf_bytes = generate_sentiment_pdf(feedback_texts, category)
-        if not pdf_bytes or pdf_bytes.getbuffer().nbytes == 0:
-            logging.error('PDF generation failed or empty PDF')
-            return jsonify({'error': 'PDF generation failed.'}), 500
-        return send_file(
-            pdf_bytes,
-            mimetype='application/pdf',
-            as_attachment=True,
-            download_name=f'Sentiment_Report_{category}.pdf'
-        )
-    except Exception as e:
-        logging.exception('Error in download_sentiment_pdf')
-        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
-from flask_login import login_required, login_user, logout_user, current_user
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, send_file
-admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
-import os
-import pandas as pd
-from io import BytesIO
-=======
-import os
-import pandas as pd
-from io import BytesIO
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, send_file
-from flask_login import login_required, login_user, logout_user, current_user
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
-from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
-from sqlalchemy import func, inspect
-from myextensions import db
-from reportlab.lib.pagesizes import letter, landscape
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-import io
-import zipfile
-<<<<<<< HEAD
-from models import User, Student, Event, Course, Staff, Question, FeedbackResponse, QuestionResponse, GeneralFeedback
-from utils.excel_handler import allowed_file, validate_student_excel, validate_course_staff_excel
-from utils.pdf_generator import generate_pdf_report
-from summarizer import summarize_feedback
 
-# Sentiment PDF download route (guaranteed registration)
-@admin_bp.route('/api/download-sentiment-pdf', methods=['POST'])
-@login_required
-def download_sentiment_pdf():
-    import logging
-    try:
-        if not current_user.is_admin:
-            logging.error('Access denied: not admin')
-            return jsonify({'error': 'Access denied'}), 403
-        data = request.get_json()
-        category = data.get('category', 'all')
-        if category == 'all':
-            feedbacks = GeneralFeedback.query.order_by(GeneralFeedback.timestamp.desc()).all()
-        else:
-            feedbacks = GeneralFeedback.query.filter_by(category=category).order_by(GeneralFeedback.timestamp.desc()).all()
-        feedback_texts = [fb.content for fb in feedbacks if fb.content]
-        if not feedback_texts:
-            logging.warning(f'No feedbacks found for category: {category}')
-            return jsonify({'error': 'No feedbacks found for this category.'}), 400
-        from utils.sentiment_pdf import generate_sentiment_pdf
-        pdf_bytes = generate_sentiment_pdf(feedback_texts, category)
-        if not pdf_bytes or pdf_bytes.getbuffer().nbytes == 0:
-            logging.error('PDF generation failed or empty PDF')
-            return jsonify({'error': 'PDF generation failed.'}), 500
-        return send_file(
-            pdf_bytes,
-            mimetype='application/pdf',
-            as_attachment=True,
-            download_name=f'Sentiment_Report_{category}.pdf'
-        )
-    except Exception as e:
-        logging.exception('Error in download_sentiment_pdf')
-        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
-from flask_login import login_required, login_user, logout_user, current_user
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, send_file
-admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
-import os
-import pandas as pd
-from io import BytesIO
-from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
-from sqlalchemy import func, inspect
-from myextensions import db
-from reportlab.lib.pagesizes import letter, landscape
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-import io
-import zipfile
-from models import User, Student, Event, Course, Staff, Question, FeedbackResponse, QuestionResponse, GeneralFeedback
-from utils.excel_handler import allowed_file, validate_student_excel, validate_course_staff_excel
-from utils.pdf_generator import generate_pdf_report
-from summarizer import summarize_feedback
-
-# Helper function: applies filter_by(is_deleted=False) if the table has an is_deleted column.
 def safe_filter(query_obj):
     try:
-        # Get the entity (model) from the query.
         entity = query_obj.column_descriptions[0]['entity']
-        # Use SQLAlchemy inspector to check column names.
         inspector = inspect(db.engine)
         columns = [col['name'] for col in inspector.get_columns(entity.__tablename__)]
         if 'is_deleted' in columns:
             return query_obj.filter_by(is_deleted=False)
     except Exception:
-        # In case of any error, simply return the original query.
         pass
     return query_obj
 
-# Sentiment PDF download route
+
 @admin_bp.route('/api/download-sentiment-pdf', methods=['POST'])
 @login_required
 def download_sentiment_pdf():
@@ -185,34 +67,7 @@ def download_sentiment_pdf():
     except Exception as e:
         logging.exception('Error in download_sentiment_pdf')
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
-# Import summarizer
-from summarizer import summarize_feedback
-=======
 
-from models import User, Student, Event, Course, Staff, Question, FeedbackResponse, QuestionResponse
-from utils.excel_handler import allowed_file, validate_student_excel, validate_course_staff_excel
-from utils.pdf_generator import generate_pdf_report
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
-
-admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
-
-# Helper function: applies filter_by(is_deleted=False) if the table has an is_deleted column.
-def safe_filter(query_obj):
-    try:
-        # Get the entity (model) from the query.
-        entity = query_obj.column_descriptions[0]['entity']
-        # Use SQLAlchemy inspector to check column names.
-        inspector = inspect(db.engine)
-        columns = [col['name'] for col in inspector.get_columns(entity.__tablename__)]
-        if 'is_deleted' in columns:
-            return query_obj.filter_by(is_deleted=False)
-    except Exception:
-        # In case of any error, simply return the original query.
-        pass
-    return query_obj
-
-<<<<<<< HEAD
-# ...existing code...
 
 @admin_bp.route('/api/download-summary-pdf', methods=['POST'])
 @login_required
@@ -224,7 +79,6 @@ def download_summary_pdf():
     summary = data.get('summary')
     if not category or not summary:
         return jsonify({'error': 'Category and summary required'}), 400
-    from utils.pdf_generator import generate_summary_pdf
     pdf_bytes = generate_summary_pdf(category, summary)
     return send_file(
         pdf_bytes,
@@ -233,26 +87,9 @@ def download_summary_pdf():
         download_name=f'AI_Summary_{category}.pdf'
     )
 
-# Helper function: applies filter_by(is_deleted=False) if the table has an is_deleted column.
-def safe_filter(query_obj):
-    try:
-        # Get the entity (model) from the query.
-        entity = query_obj.column_descriptions[0]['entity']
-        # Use SQLAlchemy inspector to check column names.
-        inspector = inspect(db.engine)
-        columns = [col['name'] for col in inspector.get_columns(entity.__tablename__)]
-        if 'is_deleted' in columns:
-            return query_obj.filter_by(is_deleted=False)
-    except Exception:
-        # In case of any error, simply return the original query.
-        pass
-    return query_obj
 
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 @admin_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    # Always require credentials, even if already authenticated
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -261,9 +98,9 @@ def login():
             login_user(user, remember=False)
             flash("Logged in successfully", "success")
             return redirect(url_for('admin.dashboard'))
-        else:
-            flash('Invalid username or password', 'danger')
+        flash('Invalid username or password', 'danger')
     return render_template('admin/login.html')
+
 
 @admin_bp.route('/logout')
 @login_required
@@ -271,6 +108,7 @@ def logout():
     logout_user()
     flash("Logged out successfully", "success")
     return redirect(url_for('admin.login'))
+
 
 @admin_bp.route('/dashboard')
 @login_required
@@ -281,10 +119,7 @@ def dashboard():
     events = safe_filter(Event.query).all()
     total_students = Student.query.count()
     total_responses = FeedbackResponse.query.count()
-<<<<<<< HEAD
     total_general_feedback = GeneralFeedback.query.count()
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     active_event = safe_filter(Event.query.filter_by(is_active=True)).first()
     event_responses = 0
     completion_rate = 0
@@ -295,10 +130,10 @@ def dashboard():
         completion_rate = (event_responses / total_students) * 100
     return render_template('admin/dashboard.html', events=events,
                            total_students=total_students, total_responses=total_responses,
-<<<<<<< HEAD
                            total_general_feedback=total_general_feedback,
                            active_event=active_event, completion_rate=completion_rate, event_responses=event_responses,
                            students=students, responded_ids=responded_ids)
+
 
 @admin_bp.route('/general-feedback')
 @login_required
@@ -306,20 +141,19 @@ def general_feedback():
     if not current_user.is_admin:
         flash('Access denied.', 'danger')
         return redirect(url_for('admin.login'))
-    
+
     category_filter = request.args.get('category', 'all')
-    
+
     if category_filter == 'all':
         feedbacks = GeneralFeedback.query.order_by(GeneralFeedback.timestamp.desc()).all()
     else:
         feedbacks = GeneralFeedback.query.filter_by(category=category_filter).order_by(GeneralFeedback.timestamp.desc()).all()
-    
-    # Get category statistics
+
     category_stats = {}
     categories = ['fc', 'library', 'transport', 'sports', 'bookdepot', 'general']
     for cat in categories:
         category_stats[cat] = GeneralFeedback.query.filter_by(category=cat).count()
-    
+
     category_names = {
         'fc': 'Food Court',
         'library': 'Library',
@@ -328,17 +162,16 @@ def general_feedback():
         'bookdepot': 'Book Depot',
         'general': 'General'
     }
-    
+
     from datetime import timedelta
-    return render_template('admin/general_feedback.html', 
-                         feedbacks=feedbacks,
-                         category_filter=category_filter,
-                         category_stats=category_stats,
-                         category_names=category_names,
-                         timedelta=timedelta)
+    return render_template('admin/general_feedback.html',
+                           feedbacks=feedbacks,
+                           category_filter=category_filter,
+                           category_stats=category_stats,
+                           category_names=category_names,
+                           timedelta=timedelta)
 
 
-# New API endpoint for AI summary
 @admin_bp.route('/api/general-feedback-summary', methods=['POST'])
 @login_required
 def general_feedback_summary():
@@ -348,10 +181,10 @@ def general_feedback_summary():
     category = data.get('category')
     if not category:
         return jsonify({'error': 'Category required'}), 400
-    # Get all comments for this category
     comments = [fb.content for fb in GeneralFeedback.query.filter_by(category=category).all()]
     summary = summarize_feedback(category, comments)
     return jsonify({'summary': summary})
+
 
 @admin_bp.route('/general-feedback/<int:feedback_id>/resolve', methods=['POST'])
 @login_required
@@ -359,59 +192,54 @@ def resolve_general_feedback(feedback_id):
     if not current_user.is_admin:
         flash('Access denied.', 'danger')
         return redirect(url_for('admin.login'))
-    
+
     feedback = GeneralFeedback.query.get_or_404(feedback_id)
     response = request.form.get('response', '')
-    
+
     feedback.is_resolved = True
     feedback.admin_response = response
     db.session.commit()
-    
+
     flash('Feedback marked as resolved.', 'success')
     return redirect(url_for('admin.general_feedback'))
+
 
 @admin_bp.route('/api/general-feedback-stats')
 @login_required
 def general_feedback_stats():
     if not current_user.is_admin:
         return jsonify({'error': 'Access denied'}), 403
-    
-    # Get monthly feedback counts for the last 6 months
+
     from datetime import datetime, timedelta
     monthly_data = []
     category_data = {}
-    
+
     categories = ['fc', 'library', 'transport', 'sports', 'bookdepot', 'general']
-    
+
     for i in range(6):
-        start_date = datetime.utcnow().replace(day=1) - timedelta(days=30*i)
+        start_date = datetime.utcnow().replace(day=1) - timedelta(days=30 * i)
         end_date = start_date.replace(day=28) + timedelta(days=4)
         end_date = end_date - timedelta(days=end_date.day)
-        
+
         total_count = GeneralFeedback.query.filter(
             GeneralFeedback.timestamp >= start_date,
             GeneralFeedback.timestamp <= end_date
         ).count()
-        
+
         monthly_data.append({
             'month': start_date.strftime('%b %Y'),
             'count': total_count
         })
-    
-    # Get category-wise data
+
     for cat in categories:
         category_data[cat] = GeneralFeedback.query.filter_by(category=cat).count()
-    
+
     return jsonify({
         'monthly_data': list(reversed(monthly_data)),
         'category_data': category_data
     })
 
-=======
-                           active_event=active_event, completion_rate=completion_rate, event_responses=event_responses,
-                           students=students, responded_ids=responded_ids)
 
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 @admin_bp.route('/events', methods=['GET', 'POST'])
 @login_required
 def manage_events():
@@ -425,11 +253,9 @@ def manage_events():
             description = request.form.get('description')
             additional_questions = request.form.get('additional_questions')
             warning_message = request.form.get('warning_message')
-            # New fields for roll number restriction
             is_open_to_all = request.form.get('is_open_to_all') == 'on'
             start_roll_number = request.form.get('start_roll_number') if not is_open_to_all else None
             end_roll_number = request.form.get('end_roll_number') if not is_open_to_all else None
-            # New: get selected courses
             course_ids = request.form.getlist('course_ids')
             if not title:
                 flash('Event title is required', 'danger')
@@ -443,7 +269,6 @@ def manage_events():
                 start_roll_number=start_roll_number,
                 end_roll_number=end_roll_number
             )
-            # Add selected courses
             if course_ids:
                 event.courses = Course.query.filter(Course.id.in_(course_ids)).all()
             db.session.add(event)
@@ -473,19 +298,14 @@ def manage_events():
             flash('Event was moved to Past Responses.', 'success')
     events = safe_filter(Event.query).all()
     courses = Course.query.all()
-<<<<<<< HEAD
     questions = Question.query.filter_by(is_archived=False).all()
-=======
-    questions = Question.query.all()
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     return render_template('admin/manage_events.html', events=events, questions=questions, courses=courses)
+
 
 @admin_bp.route('/delete_question/<int:question_id>', methods=['POST'])
 @login_required
 def delete_question(question_id):
     q = Question.query.get_or_404(question_id)
-<<<<<<< HEAD
-    # Check if any event is currently active
     try:
         active_event = Event.query.filter_by(is_active=True, is_deleted=False).first()
     except Exception:
@@ -493,20 +313,16 @@ def delete_question(question_id):
     if active_event:
         flash("Cannot delete while an event is active. Deactivate the event first.", "danger")
         return redirect(url_for('admin.manage_events'))
-    # No active event: allow deletion. If responses exist, archive instead to preserve history.
     if q.responses and len(q.responses) > 0:
         q.is_archived = True
         db.session.commit()
         flash("Question archived (has responses) and will no longer appear in new feedback.", "info")
-=======
-    if q.responses:
-        flash("Cannot delete question with existing responses.", "danger")
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     else:
         db.session.delete(q)
         db.session.commit()
         flash("Question deleted successfully.", "success")
     return redirect(url_for('admin.manage_events'))
+
 
 @admin_bp.route('/past_responses')
 @login_required
@@ -520,6 +336,7 @@ def past_responses():
         past_events = []
     return render_template('admin/past_responses.html', past_events=past_events)
 
+
 @admin_bp.route('/courses', methods=['GET', 'POST'])
 @login_required
 def manage_courses():
@@ -531,21 +348,13 @@ def manage_courses():
         if action == 'create_course':
             code = request.form.get('code')
             name = request.form.get('name')
-<<<<<<< HEAD
-=======
-            semester = request.form.get('semester')
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
             if not code or not name:
                 flash('Course code and name are required', 'danger')
                 return redirect(url_for('admin.manage_courses'))
             if Course.query.filter_by(code=code).first():
                 flash('Course code already exists', 'danger')
                 return redirect(url_for('admin.manage_courses'))
-<<<<<<< HEAD
             course = Course(code=code, name=name)
-=======
-            course = Course(code=code, name=name, semester=semester)
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
             db.session.add(course)
             db.session.commit()
             flash('Course created successfully', 'success')
@@ -555,22 +364,11 @@ def manage_courses():
             if not course_id or not staff_name:
                 flash('Course and staff name are required', 'danger')
                 return redirect(url_for('admin.manage_courses'))
-<<<<<<< HEAD
             course = Course.query.get_or_404(course_id)
             staff = Staff(name=staff_name, course_id=course.id)
             db.session.add(staff)
             db.session.commit()
             flash('Staff added successfully', 'success')
-=======
-            staff = Staff.query.get_or_404(course_id)
-            if FeedbackResponse.query.filter_by(course_id=staff.course_id).count() > 0:
-                flash('Cannot add staff to course with existing responses', 'danger')
-            else:
-                staff = Staff(name=staff_name, course_id=staff.course_id)
-                db.session.add(staff)
-                db.session.commit()
-                flash('Staff added successfully', 'success')
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
         elif action == 'delete_course':
             course_id = request.form.get('course_id')
             course = Course.query.get_or_404(course_id)
@@ -626,6 +424,7 @@ def manage_courses():
                 flash('Invalid file type. Please upload an Excel file (.xls, .xlsx)', 'danger')
     courses = Course.query.all()
     return render_template('admin/manage_courses.html', courses=courses)
+
 
 @admin_bp.route('/students', methods=['GET', 'POST'])
 @login_required
@@ -703,6 +502,7 @@ def manage_students():
     students = Student.query.all()
     return render_template('admin/manage_students.html', students=students)
 
+
 @admin_bp.route('/results')
 @login_required
 def results():
@@ -715,16 +515,13 @@ def results():
         active_event = Event.query.filter_by(is_active=True).first()
     courses = Course.query.all()
     staffs = Staff.query.all()
-<<<<<<< HEAD
     questions = Question.query.filter_by(is_archived=False).all()
-=======
-    questions = Question.query.all()
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     students = Student.query.order_by(Student.roll_number).all()
     responded_ids = set([r[0] for r in db.session.query(FeedbackResponse.student_id).filter_by(event_id=active_event.id).distinct().all()]) if active_event else set()
     return render_template('admin/results.html', active_event=active_event,
                            courses=courses, staffs=staffs, questions=questions,
                            students=students, responded_ids=responded_ids)
+
 
 @admin_bp.route('/api/results/staff/<int:staff_id>')
 @login_required
@@ -744,8 +541,6 @@ def get_staff_results(staff_id):
             return jsonify({'error': 'No active event found'}), 404
     feedback_responses = FeedbackResponse.query.filter_by(staff_id=staff_id, event_id=event_id).all()
     question_averages = {}
-<<<<<<< HEAD
-    # Only include questions that have at least one response for this staff/event
     used_q_ids = set()
     for fb in feedback_responses:
         for qr in fb.question_responses:
@@ -754,31 +549,20 @@ def get_staff_results(staff_id):
         questions = Question.query.filter(Question.id.in_(used_q_ids)).order_by(Question.id).all()
     else:
         questions = []
-=======
-    questions = Question.query.all()
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     for q in questions:
         ratings = []
         for feedback in feedback_responses:
             resp = QuestionResponse.query.filter_by(feedback_id=feedback.id, question_id=q.id).first()
             if resp:
                 ratings.append(resp.rating)
-<<<<<<< HEAD
         avg = sum(ratings) / len(ratings) if ratings else 0
         question_averages[q.id] = {'question_text': q.text, 'average': round(avg, 2), 'count': len(ratings)}
-=======
-        if ratings:
-            avg = sum(ratings) / len(ratings)
-            question_averages[q.id] = {'question_text': q.text, 'average': round(avg, 2), 'count': len(ratings)}
-        else:
-            question_averages[q.id] = {'question_text': q.text, 'average': 0, 'count': 0}
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     responded_students = db.session.query(Student.id).join(FeedbackResponse, Student.id == FeedbackResponse.student_id)\
-                         .filter(FeedbackResponse.staff_id == staff_id, FeedbackResponse.event_id == event_id)\
-                         .distinct().count()
+        .filter(FeedbackResponse.staff_id == staff_id, FeedbackResponse.event_id == event_id)\
+        .distinct().count()
     total_students = Student.query.count()
     responded_student_ids = db.session.query(FeedbackResponse.student_id)\
-                               .filter_by(event_id=event_id, staff_id=staff_id).distinct().all()
+        .filter_by(event_id=event_id, staff_id=staff_id).distinct().all()
     responded_ids = [rid[0] for rid in responded_student_ids]
     non_responder_students = Student.query.filter(~Student.id.in_(responded_ids)).all()
     non_responders = [{'roll_number': s.roll_number, 'name': s.name} for s in non_responder_students]
@@ -791,6 +575,7 @@ def get_staff_results(staff_id):
         'non_responders': non_responders,
         'response_percentage': round((responded_students / total_students * 100), 2) if total_students > 0 else 0
     })
+
 
 @admin_bp.route('/download_report/<int:staff_id>')
 @login_required
@@ -816,6 +601,32 @@ def download_report(staff_id):
     return send_file(BytesIO(pdf_buffer.getvalue()), mimetype='application/pdf',
                      as_attachment=True, download_name=filename)
 
+
+@admin_bp.route('/download_questions/<int:staff_id>')
+@login_required
+def download_questions(staff_id):
+    if not current_user.is_admin:
+        flash('Access denied.', 'danger')
+        return redirect(url_for('admin.login'))
+    event_id = request.args.get('event_id')
+    if not event_id:
+        try:
+            active_event = Event.query.filter_by(is_active=True, is_deleted=False).first()
+        except Exception:
+            active_event = Event.query.filter_by(is_active=True).first()
+        if active_event:
+            event_id = active_event.id
+        else:
+            flash('No active event found', 'danger')
+            return redirect(url_for('admin.results'))
+    pdf_buffer = generate_questions_pdf(staff_id, event_id)
+    staff = Staff.query.get_or_404(staff_id)
+    event = Event.query.get_or_404(event_id)
+    filename = f"questions_{staff.course.code}_{staff.name.replace(' ', '_')}_{event.title.replace(' ', '_')}.pdf"
+    return send_file(BytesIO(pdf_buffer.getvalue()), mimetype='application/pdf',
+                     as_attachment=True, download_name=filename)
+
+
 @admin_bp.route('/download_student_responses_pdf')
 @login_required
 def download_student_responses_pdf():
@@ -828,7 +639,6 @@ def download_student_responses_pdf():
         active_event = Event.query.filter_by(is_active=True).first()
     students = Student.query.order_by(Student.roll_number).all()
     responded_ids = set([r[0] for r in db.session.query(FeedbackResponse.student_id).filter_by(event_id=active_event.id).distinct().all()]) if active_event else set()
-    # Prepare data for PDF
     data = [['S.No', 'Roll Number', 'Name', 'Response']]
     for idx, student in enumerate(students, 1):
         response = 'Yes' if student.id in responded_ids else 'No'
@@ -838,14 +648,14 @@ def download_student_responses_pdf():
     style = getSampleStyleSheet()["Normal"]
     table = Table(data, repeatRows=1)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#007bff')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,0), 12),
-        ('FONTSIZE', (0,1), (-1,-1), 10),
-        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.whitesmoke, colors.lightgrey]),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#007bff')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.whitesmoke, colors.lightgrey]),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
     ]))
     event_title = active_event.title if active_event else 'No Event'
     event_date = active_event.created_at.strftime('%Y-%m-%d') if active_event and active_event.created_at else ''
@@ -855,13 +665,13 @@ def download_student_responses_pdf():
     buffer.seek(0)
     return send_file(buffer, mimetype='application/pdf', as_attachment=True, download_name='student_responses.pdf')
 
+
 @admin_bp.route('/download_all_reports')
 @login_required
 def download_all_reports():
     if not current_user.is_admin:
         flash('Access denied.', 'danger')
         return redirect(url_for('admin.login'))
-    # Get all staff for the active event
     try:
         active_event = Event.query.filter_by(is_active=True, is_deleted=False).first()
     except Exception:
@@ -870,7 +680,6 @@ def download_all_reports():
         flash('No active event found.', 'danger')
         return redirect(url_for('admin.results'))
     staffs = Staff.query.all()
-    # Create a zip of PDFs
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w') as zipf:
         for staff in staffs:
@@ -879,59 +688,4 @@ def download_all_reports():
             filename = f"report_{staff.course.code}_{staff.name.replace(' ', '_')}_{active_event.title.replace(' ', '_')}.pdf"
             zipf.writestr(filename, pdf_buffer.read())
     zip_buffer.seek(0)
-    return send_file(zip_buffer, mimetype='application/zip', as_attachment=True, download_name='all_staff_reports.zip')
-
-@admin_bp.route('/api/responses/<int:staff_id>')
-@login_required
-def api_responses(staff_id):
-    if not current_user.is_admin:
-        return jsonify({'error': 'Access denied'}), 403
-    staff = Staff.query.get_or_404(staff_id)
-    try:
-        active_event = Event.query.filter_by(is_active=True, is_deleted=False).first()
-    except Exception:
-        active_event = Event.query.filter_by(is_active=True).first()
-    if not active_event:
-        return jsonify({'error': 'No active event found'}), 404
-    feedbacks = FeedbackResponse.query.filter_by(staff_id=staff_id, event_id=active_event.id).all()
-    responses = []
-    for fb in feedbacks:
-        student = Student.query.get(fb.student_id)
-        # Collect all question responses as a string
-        q_resps = QuestionResponse.query.filter_by(feedback_id=fb.id).all()
-        resp_text = '; '.join([f"{qr.question.text}: {qr.rating}" for qr in q_resps])
-        responses.append({'student_name': student.name, 'response': resp_text})
-    return jsonify({'responses': responses})
-
-# Route to force logout (for use when leaving admin area)
-@admin_bp.route('/force_logout')
-def force_logout():
-    logout_user()
-    flash("Session ended. Please log in again to access the admin panel.", "info")
-    return redirect(url_for('index'))
-<<<<<<< HEAD
-
-# New route using updated AI PDF generator in utils/feedback_ai.py
-@admin_bp.route('/api/download-ai-summary-pdf', methods=['POST'])
-@login_required
-def download_ai_summary_pdf():
-    if not current_user.is_admin:
-        return jsonify({'error': 'Access denied'}), 403
-    data = request.get_json() or {}
-    category = data.get('category')
-    summary = data.get('summary')
-    if not category or not summary:
-        return jsonify({'error': 'Category and summary required'}), 400
-    try:
-        from utils import feedback_ai as ai_mod
-        pdf_bytes = ai_mod.generate_summary_pdf(category, summary)
-    except Exception as e:
-        return jsonify({'error': f'AI summary PDF generation failed: {e}'}), 500
-    return send_file(
-        pdf_bytes,
-        mimetype='application/pdf',
-        as_attachment=True,
-        download_name=f'AI_Summary_{category}.pdf'
-    )
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
+    return send_file(zip_buffer, mimetype='application/zip', as_attachment=True, download_name='all_reports.zip')

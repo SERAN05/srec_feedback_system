@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-<<<<<<< HEAD
 {% block title %}Admin Login | Feedback System{% endblock %}
-=======
-{% block title %}Admin Login | Course Feedback System{% endblock %}
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 {% endblock %}
@@ -12,16 +8,12 @@
   <div class="col-md-6 col-lg-4">
     <div class="card login-card animate__animated animate__fadeIn">
       <div class="card-header bg-primary text-white text-center">
-<<<<<<< HEAD
         <div class="mb-2">
           <div class="bg-white bg-opacity-25 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 70px; height: 70px; overflow: hidden;">
             <img src="{{ url_for('static', filename='images/admin.png') }}" alt="Admin Profile" style="width:64px; height:64px; object-fit: cover; border-radius: 50%; background: #fff;">
           </div>
         </div>
         <h3 class="mt-2"><i class="fas fa-user-shield me-2"></i>Admin Login</h3>
-=======
-        <h3><i class="fas fa-user-shield me-2"></i>Admin Login</h3>
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
       </div>
       <div class="card-body">
         <form action="{{ url_for('admin.login') }}" method="post">

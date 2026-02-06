@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-<<<<<<< HEAD
 {% block title %}Feedback Form | Feedback System{% endblock %}
-=======
-{% block title %}Feedback Form | Course Feedback System{% endblock %}
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/student.css') }}">
@@ -154,11 +150,7 @@
                       <i class="fas fa-question-circle me-2"></i>Evaluation Criteria
                     </th>
                     {% for course in courses %}
-<<<<<<< HEAD
                       <th>
-=======
-                      <th style="width: {{ 60 // courses|length }}%;">
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
                         <i class="fas fa-book me-2"></i>{{ course.name }}
                       </th>
                     {% endfor %}

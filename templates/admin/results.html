@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-<<<<<<< HEAD
 {% block title %}Results | Feedback System{% endblock %}
-=======
-{% block title %}Results | Course Feedback System{% endblock %}
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
@@ -12,11 +8,7 @@
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
   <div class="container">
-<<<<<<< HEAD
   <a class="navbar-brand d-flex align-items-center" href="#"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;"><span class="navbar-title-visible">Feedback System</span></a>
-=======
-    <a class="navbar-brand d-flex align-items-center" href="#"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SREC Logo" style="height:42px; margin-right:12px; border-radius: 6px;"><span class="navbar-title-visible">Course Feedback System</span></a>
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -83,6 +75,7 @@
   <div id="staffReportSection" class="mb-4" style="display:none;"></div>
   <div class="mt-3">
     <button id="downloadPdf" class="btn btn-outline-primary">Download PDF Report</button>
+    <button id="downloadQuestionsPdf" class="btn btn-outline-secondary ms-2">Download Questions PDF</button>
     <button id="downloadAllPdf" class="btn btn-outline-success ms-2">Download all result pdf</button>
   </div>
 </div>
@@ -159,6 +152,14 @@ document.getElementById('downloadPdf').addEventListener('click', function(){
 });
 document.getElementById('downloadAllPdf').addEventListener('click', function(){
   window.location.href = '/admin/download_all_reports';
+});
+document.getElementById('downloadQuestionsPdf').addEventListener('click', function(){
+  var staffId = document.getElementById('staffSelect').value;
+  if(staffId){
+    window.location.href = '/admin/download_questions/' + staffId;
+  } else {
+    alert("Please select a staff.");
+  }
 });
 </script>
 {% endblock %}

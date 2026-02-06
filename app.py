@@ -46,7 +46,6 @@ def create_app(config_class=Config):
 
     from routes.admin_routes import admin_bp
     from routes.student_routes import student_bp
-<<<<<<< HEAD
     from routes.incharge_routes import incharge_bp
     app.register_blueprint(admin_bp)
     app.register_blueprint(student_bp)
@@ -62,7 +61,7 @@ def create_app(config_class=Config):
         admin = User.query.filter_by(is_admin=True).first()
         if not admin:
             from werkzeug.security import generate_password_hash
-            admin = User(username=admin_username, 
+            admin = User(username=admin_username,
                          password_hash=generate_password_hash(admin_password),
                          is_admin=True)
             db.session.add(admin)
@@ -70,71 +69,48 @@ def create_app(config_class=Config):
             from werkzeug.security import generate_password_hash
             admin.username = admin_username
             admin.password_hash = generate_password_hash(admin_password)
-            
-            # Create default in-charge users
-            incharge_categories = ['fc', 'library', 'transport', 'sports', 'bookdepot']
-            for category in incharge_categories:
-                existing_incharge = User.query.filter_by(username=category, is_incharge=True).first()
-                incharge_password = f'{category}@srec.ac.in'
-                if not existing_incharge:
-                    incharge = User(
-                        username=category,
-                        password_hash=generate_password_hash(incharge_password),
-                        is_incharge=True,
-                        incharge_category=category
-                    )
-                    db.session.add(incharge)
-                else:
-                    existing_incharge.password_hash = generate_password_hash(incharge_password)
-            
-=======
-    app.register_blueprint(admin_bp)
-    app.register_blueprint(student_bp)
 
-    with app.app_context():
-        from models import User, Student, Event, Course, Staff, Question, FeedbackResponse
-        db.create_all()
+        # Create default in-charge users
+        from werkzeug.security import generate_password_hash
+        incharge_categories = ['fc', 'library', 'transport', 'sports', 'bookdepot']
+        for category in incharge_categories:
+            existing_incharge = User.query.filter_by(username=category, is_incharge=True).first()
+            incharge_password = f'{category}@srec.ac.in'
+            if not existing_incharge:
+                incharge = User(
+                    username=category,
+                    password_hash=generate_password_hash(incharge_password),
+                    is_incharge=True,
+                    incharge_category=category
+                )
+                db.session.add(incharge)
+            else:
+                existing_incharge.password_hash = generate_password_hash(incharge_password)
 
-        # Create admin and default questions if not present
-        admin = User.query.filter_by(username='admin').first()
-        if not admin:
-            from werkzeug.security import generate_password_hash
-            admin = User(username='admin', 
-                         password_hash=generate_password_hash('admin123'),
-                         is_admin=True)
-            db.session.add(admin)
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
-            questions_text = [
-                "How would you rate the clarity of course objectives?",
-                "How would you rate the organization of course content?",
-                "How would you rate the relevance of course materials?",
-                "How would you rate the availability of learning resources?",
-<<<<<<< HEAD
-                "How would you rate the instructor's knowledge of the subject?"
-            ]
-            from models import Question
-            existing_ids = {q.id for q in Question.query.with_entities(Question.id).all()}
-            for i, q_text in enumerate(questions_text, start=1):
-                if i in existing_ids:
-                    continue
-=======
-                "How would you rate the instructor's knowledge of the subject?",
-                "How would you rate the instructor's teaching methods?",
-                "How would you rate the instructor's responsiveness to questions?",
-                "How would you rate the clarity of assessment criteria?",
-                "How would you rate the fairness of grading?",
-                "How would you rate the timeliness of feedback?",
-                "How would you rate the practical application of concepts?",
-                "How would you rate the classroom/online learning environment?",
-                "How would you rate the overall course difficulty?",
-                "How would you rate the effectiveness of labs/assignments?",
-                "How would you rate your overall satisfaction with this course?"
-            ]
-            for i, q_text in enumerate(questions_text, start=1):
-                from models import Question
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
-                db.session.add(Question(id=i, text=q_text))
-            db.session.commit()
+        questions_text = [
+            "How would you rate the clarity of course objectives?",
+            "How would you rate the organization of course content?",
+            "How would you rate the relevance of course materials?",
+            "How would you rate the availability of learning resources?",
+            "How would you rate the instructor's knowledge of the subject?",
+            "How would you rate the instructor's teaching methods?",
+            "How would you rate the instructor's responsiveness to questions?",
+            "How would you rate the clarity of assessment criteria?",
+            "How would you rate the fairness of grading?",
+            "How would you rate the timeliness of feedback?",
+            "How would you rate the practical application of concepts?",
+            "How would you rate the classroom/online learning environment?",
+            "How would you rate the overall course difficulty?",
+            "How would you rate the effectiveness of labs/assignments?",
+            "How would you rate your overall satisfaction with this course?"
+        ]
+        from models import Question
+        existing_ids = {q.id for q in Question.query.with_entities(Question.id).all()}
+        for i, q_text in enumerate(questions_text, start=1):
+            if i in existing_ids:
+                continue
+            db.session.add(Question(id=i, text=q_text))
+        db.session.commit()
 
     @app.route('/')
     def index():

@@ -14,11 +14,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-<<<<<<< HEAD
     is_incharge = db.Column(db.Boolean, default=False)
     incharge_category = db.Column(db.String(50), nullable=True)  # fc, library, transport, sports, bookdepot
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -29,7 +26,6 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f'<User {self.username}>'
 
-<<<<<<< HEAD
 # New General Feedback Model
 class GeneralFeedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,8 +39,6 @@ class GeneralFeedback(db.Model):
 
     def __repr__(self):
         return f'<GeneralFeedback {self.category}: {self.id}>'
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     roll_number = db.Column(db.String(20), unique=True, nullable=False)
@@ -91,10 +85,6 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(20), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
-<<<<<<< HEAD
-=======
-    semester = db.Column(db.Integer, nullable=True)
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
     staffs = db.relationship('Staff', backref='course', lazy=True)
     feedback_responses = db.relationship('FeedbackResponse', backref='course', lazy=True)
 
@@ -114,11 +104,8 @@ class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
     responses = db.relationship('QuestionResponse', backref='question', lazy=True)
-<<<<<<< HEAD
     # Soft archive so historical responses remain intact
     is_archived = db.Column(db.Boolean, default=False)
-=======
->>>>>>> 4f20009145f69254e2269f4cf004e63fbc874e2c
 
     def __repr__(self):
         return f'<Question {self.id}: {self.text[:20]}...>'
